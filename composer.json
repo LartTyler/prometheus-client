@@ -1,0 +1,28 @@
+{
+	"name": "dbstudios/prometheus-client",
+	"type": "library",
+	"description": "A client library for Prometheus",
+	"license": "GPL-3.0",
+	"authors": [
+		{
+			"name": "Tyler Lartonoix",
+			"email": "tyler@lartonoix.com",
+			"homepage": "https://github.com/LartTyler"
+		}
+	],
+	"require": {
+		"php": ">=5.6",
+		"ext-json": "*"
+	},
+	"require-dev": {
+		"ext-apcu": "*"
+	},
+	"suggest": {
+		"ext-apcu": "If you want to use the APCu adapter"
+	},
+	"autoload": {
+		"psr-4": {
+			"DaybreakStudios\\PrometheusClient\\": "src/"
+		}
+	}
+}
