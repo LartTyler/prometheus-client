@@ -23,6 +23,9 @@
 			$lines = [];
 
 			foreach ($metrics as $metric) {
+				if (!$metric->getSamples())
+					continue;
+
 				$lines[] = sprintf('# HELP %s %s', $metric->getName(), $this->sanitize($metric->getHelp()));
 				$lines[] = sprintf('# TYPE %s %s', $metric->getName(), $metric->getType());
 
