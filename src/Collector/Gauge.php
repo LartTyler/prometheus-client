@@ -36,7 +36,7 @@
 		 *
 		 * @return $this
 		 */
-		public function inc(array $labels = [], $step = 1) {
+		public function increment(array $labels = [], $step = 1) {
 			$storageKey = $this->getStorageKey($labels);
 
 			$this->adapter->create($storageKey, 0);
@@ -56,7 +56,7 @@
 		 *
 		 * @return $this
 		 */
-		public function dec(array $labels = [], $step = 1) {
+		public function decrement(array $labels = [], $step = 1) {
 			$storageKey = $this->getStorageKey($labels);
 
 			$this->adapter->create($storageKey, 0);
