@@ -179,7 +179,7 @@
 		 * @return array
 		 */
 		protected function decodeLabels($encodedLabels) {
-			return json_decode(base64_decode($encodedLabels, true));
+			return json_decode(base64_decode($encodedLabels), true);
 		}
 
 		/**
