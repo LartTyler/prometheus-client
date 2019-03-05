@@ -66,6 +66,27 @@ Once a collector is registered, you can either expose them as global variables, 
     $testHistogram->observe(153);
 ```
 
+## Using Labels
+You must define all of a collector's labels when its registered.
+
+```php
+<?php
+    use DaybreakStudios\PrometheusClient\Collector\Counter;
+    
+    $counter = new Counter($adapter, 'api_calls_total', 'Number of API calls made', [
+        'path',
+        'method',  	
+    ]);
+    
+    $counter->increment([
+    	'method' => 'GET',
+    	'path' => '/users/me',
+    ]);
+```
+
+The order in which you specify the labels when using the collector (i.e. in `Counter::increment()` in the example above)
+does not matter, however ALL label values must be provided each time. 
+
 ## Exporting
 You can export data from your registry by setting up an endpoint in your application with code similar to the code
 below.
