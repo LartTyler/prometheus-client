@@ -60,11 +60,28 @@ Once a collector is registered, you can either expose them as global variables, 
 ```php
 <?php
     $testCounter = $registry->get('test_counter');
-    $testCounter->inc();
+    $testCounter->increment();
     
     $testHistogram = $registry->get('test_histogram');
     $testHistogram->observe(153);
 ```
+
+## "Strong" Typing
+To help enforce types when retrieving collectors from the registry, you can use the `getCounter()`, `getGauge()`, and
+`getHistogram()` methods in place of the basic `get()` method.
+
+```php
+<?php
+    $counter = $registry->getCounter('test_counter');
+    $counter->increment();
+    
+    $histogram = $registry->getHistogram('test_gauge');
+    // throws DaybreakStudios\PrometheusClient\Exception\CollectorRegistryException due to type mismatch
+```
+
+In addition to performing the same `null` checking that `get()` performs, each of those methods will also check that the
+collector is of the expected type, and throw an exception if the collector is not. They'll also correctly enable IDE
+autocompletion, since those three methods specify the proper return type in their PHPDoc block.
 
 ## Using Labels
 You must define all of a collector's labels when its registered.
