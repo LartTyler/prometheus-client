@@ -20,15 +20,15 @@
 		 * @param AdapterInterface $adapter
 		 * @param string           $name
 		 * @param string           $help
-		 * @param array            $labelNames
 		 * @param array            $buckets
+		 * @param array            $labelNames
 		 */
 		public function __construct(
 			AdapterInterface $adapter,
 			$name,
 			$help,
-			array $labelNames = [],
-			array $buckets = []
+			array $buckets,
+			array $labelNames = []
 		) {
 			if (in_array('le', $labelNames))
 				throw new \InvalidArgumentException('Histograms cannot have a label named "le"');
