@@ -49,7 +49,7 @@
 						$line .= '}';
 					}
 
-					$lines[] = $line;
+					$lines[] = $line . ' ' . $sample->getValue();
 				}
 			}
 
