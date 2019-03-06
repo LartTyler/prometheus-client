@@ -81,4 +81,11 @@
 		public function search($prefix) {
 			return new ApcuIteratorWrapper(new \APCUIterator('/' . str_replace('/^', '\\/', $prefix) . '/'));
 		}
+
+		/**
+		 * {@inheritdoc}
+		 */
+		public function clear() {
+			return apcu_clear_cache();
+		}
 	}

@@ -142,6 +142,20 @@
 		}
 
 		/**
+		 * {@inheritdoc}
+		 */
+		public function clear() {
+			foreach (scandir($this->basePath) as $item) {
+				if (is_dir($item))
+					continue;
+
+				unlink($item);
+			}
+
+			return true;
+		}
+
+		/**
 		 * @param string $key
 		 *
 		 * @return string

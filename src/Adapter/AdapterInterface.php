@@ -72,4 +72,9 @@
 		 * @return \Iterator
 		 */
 		public function search($prefix);
+
+		/**
+		 * @return bool
+		 */
+		public function clear();
 	}
