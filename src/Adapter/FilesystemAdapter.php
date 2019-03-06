@@ -172,7 +172,7 @@
 		 */
 		protected function encodeFilename($key) {
 			if (!isset($this->keyCache[$key]))
-				$this->keyCache[$key] = base64_encode(strtr($key, '=+/', '-_.'));
+				$this->keyCache[$key] = strtr(base64_encode($key), '=+/', '-_.');
 
 			return $this->keyCache[$key];
 		}
