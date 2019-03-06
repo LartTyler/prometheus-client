@@ -127,7 +127,6 @@
 		 * {@inheritdoc}
 		 */
 		public function search($prefix) {
-			$prefix = $this->encodeFilename($prefix);
 			$keys = [];
 
 			foreach (scandir($this->basePath) as $item) {
@@ -135,8 +134,10 @@
 				if (strpos($item, '.') === 0)
 					continue;
 
-				if (strpos($item, $prefix) === 0)
-					$keys[] = $this->decodeFilename($item);
+				$key = $this->decodeFilename($item);
+
+				if (strpos($key, $prefix) === 0)
+					$keys[] = $key;
 			}
 
 			return new FilesystemIterator($this, $keys);
