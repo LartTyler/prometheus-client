@@ -131,7 +131,8 @@
 			$keys = [];
 
 			foreach (scandir($this->basePath) as $item) {
-				if ($item === '.' || $item === '..')
+				// Ignore any dotfiles in the directory (to support things like .gitkeep / .gitignore)
+				if (strpos($item, '.') === 0)
 					continue;
 
 				if (strpos($item, $prefix) === 0)
