@@ -78,7 +78,7 @@
 		 */
 		public function collect() {
 			$prefix = $this->getStorageSearchPrefix();
-			$buckets = [];
+			$bucketValues = [];
 
 			foreach ($this->adapter->search($prefix) as $key => $value) {
 				$parts = explode(':', $key);
@@ -90,11 +90,14 @@
 				if ($suffix === 'sum')
 					$value = FloatSupport::decode($value);
 
-				$buckets[$labels][$suffix] = $value;
+				$bucketValues[$labels][$suffix] = $value;
 			}
 
-			$bucketKeys = array_keys($buckets);
+			$bucketKeys = array_keys($bucketValues);
 			sort($bucketKeys);
+
+			$buckets = $this->buckets;
+			$buckets[] = '+Inf';
 
 			$samples = [];
 
@@ -102,8 +105,9 @@
 				$count = 0;
 				$labels = $this->decodeLabels($key);
 
-				foreach ($this->buckets as $bucket) {
-					$count += $buckets[$key][$bucket];
+				foreach ($buckets as $bucket) {
+					if (isset($bucketValues[$key][$bucket]))
+						$count += $bucketValues[$key][$bucket];
 
 					$samples[] = new Sample(
 						$count,
@@ -115,7 +119,7 @@
 				}
 
 				$samples[] = new Sample($count, $labels, $this->getName() . '_count');
-				$samples[] = new Sample($buckets[$key]['sum'], $labels, $this->getName() . '_sum');
+				$samples[] = new Sample($bucketValues[$key]['sum'], $labels, $this->getName() . '_sum');
 			}
 
 			return [
