@@ -8,6 +8,8 @@
 		 * @return static
 		 */
 		public static function compareAndSwapTimeout($timeout) {
-			return new static('A compare and swap operation has exceeded it\'s configured timeout of ' . $timeout);
+			return new static(
+				'A compare and swap operation has exceeded it\'s configured timeout of ' . $timeout . 'ms'
+			);
 		}
 	}

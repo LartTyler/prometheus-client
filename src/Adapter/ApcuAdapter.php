@@ -60,7 +60,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function compareAndSwap($key, callable $mutator, $timeout = 500000) {
+		public function compareAndSwap($key, callable $mutator, $timeout = 500) {
 			$startTime = microtime(true);
 			$done = false;
 
@@ -68,7 +68,7 @@
 				$old = $this->get($key);
 				$done = apcu_cas($key, $old, call_user_func($mutator, $old));
 
-				if (microtime(true) - $startTime >= $timeout)
+				if ((microtime(true) - $startTime) * 1000 >= $timeout)
 					throw AdapterException::compareAndSwapTimeout($timeout);
 			}
 
