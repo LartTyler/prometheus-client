@@ -167,6 +167,8 @@
 		}
 
 		/**
+		 * Encodes a key so that it can be safely used as a file name.
+		 *
 		 * @param string $key
 		 *
 		 * @return string
@@ -179,6 +181,8 @@
 		}
 
 		/**
+		 * Decodes a key encoded as a file name.
+		 *
 		 * @param string $encodedFilename
 		 *
 		 * @return string
@@ -188,6 +192,8 @@
 		}
 
 		/**
+		 * Serializes a value for storage.
+		 *
 		 * @param mixed $value
 		 *
 		 * @return string
@@ -197,6 +203,8 @@
 		}
 
 		/**
+		 * De-serializes a stored value.
+		 *
 		 * @param string $data
 		 *
 		 * @return mixed

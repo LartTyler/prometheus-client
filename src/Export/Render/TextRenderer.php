@@ -8,9 +8,7 @@
 		const MIME_TYPE = 'text/plain; version=0.0.4';
 
 		/**
-		 * @param MetricInterface[] $metrics
-		 *
-		 * @return string
+		 * {@inheritdoc}
 		 */
 		public function render(array $metrics) {
 			usort(
@@ -57,7 +55,7 @@
 		}
 
 		/**
-		 * @return string
+		 * {@inheritdoc}
 		 */
 		public function getMimeType() {
 			return static::MIME_TYPE;
