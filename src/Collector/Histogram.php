@@ -87,6 +87,9 @@
 				$suffix = $parts[$count - 1];
 				$labels = $parts[$count - 2];
 
+				if ($suffix === 'sum')
+					$value = FloatSupport::decode($value);
+
 				$buckets[$labels][$suffix] = $value;
 			}
 
