@@ -69,4 +69,11 @@
 
 			return $this;
 		}
+
+		/**
+		 * {@inheritdoc}
+		 */
+		protected function decodeValue($value) {
+			return FloatSupport::decode($value);
+		}
 	}
