@@ -19,12 +19,13 @@
 		 * FilesystemAdapter constructor.
 		 *
 		 * @param string $basePath
+		 * @throws \RuntimeException if $basePath is not readable or writable by PHP
 		 */
 		public function __construct($basePath) {
 			$this->basePath = rtrim($basePath, '\\/');
 
 			if (!is_readable($this->basePath) || !is_writable($this->basePath))
-				throw new \RuntimeException($this->basePath . ' must be readable and writeable by PHP');
+				throw new \RuntimeException($this->basePath . ' must be readable and writable by PHP');
 		}
 
 		/**
@@ -69,7 +70,7 @@
 		public function increment($key, $step = 1, $initialValue = 0) {
 			$this->create($key, $initialValue);
 
-			return $this->compareAndSwap(
+			return $this->modify(
 				$key,
 				function($old) use ($step) {
 					return $old + $step;
@@ -83,7 +84,7 @@
 		public function decrement($key, $step = 1, $initialValue = 0) {
 			$this->create($key, $initialValue);
 
-			return $this->compareAndSwap(
+			return $this->modify(
 				$key,
 				function($old) use ($step) {
 					return $old - $step;
@@ -106,7 +107,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function compareAndSwap($key, callable $mutator, $timeout = 500) {
+		public function modify($key, callable $mutator, $timeout = 500) {
 			if (!$this->exists($key))
 				return false;
 
@@ -148,17 +149,21 @@
 		 */
 		public function clear() {
 			foreach (scandir($this->basePath) as $item) {
-				if (is_dir($item))
+				$path = $this->basePath . DIRECTORY_SEPARATOR . $item;
+
+				if (is_dir($path))
 					continue;
 
-				unlink($item);
+				unlink($path);
 			}
 
 			return true;
 		}
 
 		/**
-		 * @param string $key
+		 * Converts a key into an absolute file path.
+		 *
+		 * @param string $key The un-encoded key for the item
 		 *
 		 * @return string
 		 */

@@ -60,7 +60,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function compareAndSwap($key, callable $mutator, $timeout = 500) {
+		public function modify($key, callable $mutator, $timeout = 500) {
 			$startTime = microtime(true);
 			$done = false;
 

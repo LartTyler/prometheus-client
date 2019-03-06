@@ -51,7 +51,7 @@
 			$sumKey = $storageKey . ':sum';
 
 			$this->adapter->create($sumKey, 0);
-			$this->adapter->compareAndSwap(
+			$this->adapter->modify(
 				$sumKey,
 				function($old) use ($value) {
 					return FloatSupport::encode(FloatSupport::decode($old) + $value);

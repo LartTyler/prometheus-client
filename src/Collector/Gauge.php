@@ -40,7 +40,7 @@
 			$storageKey = $this->getStorageKey($labels);
 
 			$this->adapter->create($storageKey, 0);
-			$this->adapter->compareAndSwap(
+			$this->adapter->modify(
 				$storageKey,
 				function($old) use ($step) {
 					return FloatSupport::encode(FloatSupport::decode($old) + $step);
@@ -60,7 +60,7 @@
 			$storageKey = $this->getStorageKey($labels);
 
 			$this->adapter->create($storageKey, 0);
-			$this->adapter->compareAndSwap(
+			$this->adapter->modify(
 				$storageKey,
 				function($old) use ($step) {
 					return FloatSupport::encode(FloatSupport::decode($old) - $step);
