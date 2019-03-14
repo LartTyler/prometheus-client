@@ -151,7 +151,7 @@
 			foreach (scandir($this->basePath) as $item) {
 				$path = $this->basePath . DIRECTORY_SEPARATOR . $item;
 
-				if (is_dir($path))
+				if (is_dir($path) || strpos($item, '.') === 0)
 					continue;
 
 				unlink($path);
