@@ -25,7 +25,9 @@
 		 * @return $this
 		 */
 		public function set($value, array $labels = []) {
-			$this->adapter->set($this->getStorageKey($labels), FloatSupport::encode($value));
+			$this->assertLabelsAreValid($labels);
+
+			$this->adapter->set($this->getStorageKey($labels), $value);
 
 			return $this;
 		}
@@ -37,15 +39,9 @@
 		 * @return $this
 		 */
 		public function increment(array $labels = [], $step = 1) {
-			$storageKey = $this->getStorageKey($labels);
+			$this->assertLabelsAreValid($labels);
 
-			$this->adapter->create($storageKey, 0);
-			$this->adapter->modify(
-				$storageKey,
-				function($old) use ($step) {
-					return FloatSupport::encode(FloatSupport::decode($old) + $step);
-				}
-			);
+			$this->adapter->increment($this->getStorageKey($labels), $step);
 
 			return $this;
 		}
@@ -57,23 +53,10 @@
 		 * @return $this
 		 */
 		public function decrement(array $labels = [], $step = 1) {
-			$storageKey = $this->getStorageKey($labels);
+			$this->assertLabelsAreValid($labels);
 
-			$this->adapter->create($storageKey, 0);
-			$this->adapter->modify(
-				$storageKey,
-				function($old) use ($step) {
-					return FloatSupport::encode(FloatSupport::decode($old) - $step);
-				}
-			);
+			$this->adapter->decrement($this->getStorageKey($labels), $step);
 
 			return $this;
-		}
-
-		/**
-		 * {@inheritdoc}
-		 */
-		protected function decodeValue($value) {
-			return FloatSupport::decode($value);
 		}
 	}

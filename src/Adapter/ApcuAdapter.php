@@ -2,6 +2,7 @@
 	namespace DaybreakStudios\PrometheusClient\Adapter;
 
 	use DaybreakStudios\PrometheusClient\Adapter\Exceptions\AdapterException;
+	use DaybreakStudios\PrometheusClient\Collector\FloatSupport;
 
 	class ApcuAdapter implements AdapterInterface {
 		/**
@@ -15,21 +16,21 @@
 		 * {@inheritdoc}
 		 */
 		public function set($key, $value) {
-			return apcu_store($key, $value);
+			return apcu_store($key, $this->encode($value));
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
 		public function get($key) {
-			return apcu_fetch($key);
+			return $this->decode(apcu_fetch($key));
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
 		public function create($key, $value) {
-			return apcu_add($key, $value);
+			return apcu_add($key, $this->encode($value));
 		}
 
 		/**
@@ -38,7 +39,12 @@
 		public function increment($key, $step = 1, $initialValue = 0) {
 			$this->create($key, $initialValue);
 
-			apcu_inc($key, $step);
+			return $this->modify(
+				$key,
+				function($old) use ($step) {
+					return $old + $step;
+				}
+			);
 		}
 
 		/**
@@ -47,7 +53,12 @@
 		public function decrement($key, $step = 1, $initialValue = 0) {
 			$this->create($key, $initialValue);
 
-			return apcu_dec($key, $step);
+			return $this->modify(
+				$key,
+				function($old) use ($step) {
+					return $old - $step;
+				}
+			);
 		}
 
 		/**
@@ -66,7 +77,8 @@
 
 			while (!$done) {
 				$old = $this->get($key);
-				$done = apcu_cas($key, $old, call_user_func($mutator, $old));
+
+				$done = apcu_cas($key, $this->encode($old), call_user_func($mutator, $old));
 
 				if ((microtime(true) - $startTime) * 1000 >= $timeout)
 					throw AdapterException::compareAndSwapTimeout($timeout);
@@ -87,5 +99,27 @@
 		 */
 		public function clear() {
 			return apcu_clear_cache();
+		}
+
+		/**
+		 * Encodes a value so that it can be safely used by an APCu function.
+		 *
+		 * @param int|float $value
+		 *
+		 * @return int
+		 */
+		protected function encode($value) {
+			return FloatSupport::encode($value);
+		}
+
+		/**
+		 * Decodes a stored value for general use.
+		 *
+		 * @param int $value
+		 *
+		 * @return int|float
+		 */
+		protected function decode($value) {
+			return FloatSupport::decode($value);
 		}
 	}
