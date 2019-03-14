@@ -167,10 +167,9 @@
 		 * @return string
 		 */
 		protected function encodeLabels(array $labels) {
-			$copy = $labels;
-			ksort($copy);
+			ksort($labels);
 
-			return base64_encode(json_encode($copy));
+			return base64_encode(json_encode($labels));
 		}
 
 		/**
