@@ -54,7 +54,7 @@
 			$this->adapter->modify(
 				$sumKey,
 				function($old) use ($value) {
-					return FloatSupport::encode(FloatSupport::decode($old) + $value);
+					return $old + $value;
 				}
 			);
 
@@ -86,9 +86,6 @@
 
 				$suffix = $parts[$count - 1];
 				$labels = $parts[$count - 2];
-
-				if ($suffix === 'sum')
-					$value = FloatSupport::decode($value);
 
 				$bucketValues[$labels][$suffix] = $value;
 			}

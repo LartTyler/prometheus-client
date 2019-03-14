@@ -109,7 +109,7 @@
 			foreach ($this->adapter->search($prefix) as $key => $value) {
 				$labels = $this->decodeLabels(substr($key, strrpos($key, ':') + 1));
 
-				$samples[] = new Sample($this->decodeValue($value), $labels);
+				$samples[] = new Sample($value, $labels);
 			}
 
 			usort(
@@ -167,10 +167,9 @@
 		 * @return string
 		 */
 		protected function encodeLabels(array $labels) {
-			$copy = $labels;
-			ksort($copy);
+			ksort($labels);
 
-			return base64_encode(json_encode($copy));
+			return base64_encode(json_encode($labels));
 		}
 
 		/**
@@ -180,15 +179,6 @@
 		 */
 		protected function decodeLabels($encodedLabels) {
 			return json_decode(base64_decode($encodedLabels), true);
-		}
-
-		/**
-		 * @param mixed $value
-		 *
-		 * @return mixed
-		 */
-		protected function decodeValue($value) {
-			return $value;
 		}
 
 		/**

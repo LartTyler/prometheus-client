@@ -14,8 +14,8 @@
 		/**
 		 * Sets the given key's value. This method does not have to be executed synchronously with other processes.
 		 *
-		 * @param string $key
-		 * @param mixed  $value
+		 * @param string    $key
+		 * @param int|float $value
 		 *
 		 * @return bool
 		 */
@@ -26,15 +26,15 @@
 		 *
 		 * @param string $key
 		 *
-		 * @return mixed
+		 * @return int|float
 		 */
 		public function get($key);
 
 		/**
 		 * Adds a new item to the store only if the given key does not already exist.
 		 *
-		 * @param string $key
-		 * @param mixed  $value
+		 * @param string    $key
+		 * @param int|float $value
 		 *
 		 * @return bool
 		 */
@@ -44,9 +44,9 @@
 		 * Increments the value of a key in the store. This method MUST be executed such that simultaneous increments
 		 * from different processes (threads) properly increment the value.
 		 *
-		 * @param string $key
-		 * @param int    $step
-		 * @param int    $initialValue
+		 * @param string    $key
+		 * @param int|float $step
+		 * @param int|float $initialValue
 		 *
 		 * @return bool
 		 */
@@ -56,9 +56,9 @@
 		 * Decrements the value of a key in the store. This method MUST be executed such that simultaneous decrements
 		 * from different processes (threads) properly decrement the value.
 		 *
-		 * @param string $key
-		 * @param int    $step
-		 * @param int    $initialValue
+		 * @param string    $key
+		 * @param int|float $step
+		 * @param int|float $initialValue
 		 *
 		 * @return bool
 		 */
