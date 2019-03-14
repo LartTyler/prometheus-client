@@ -103,8 +103,10 @@
 				$labels = $this->decodeLabels($key);
 
 				foreach ($buckets as $bucket) {
-					if (isset($bucketValues[$key][$bucket]))
-						$count += $bucketValues[$key][$bucket];
+					$index = (string)$bucket;
+
+					if (isset($bucketValues[$key][$index]))
+						$count += $bucketValues[$key][$index];
 
 					$samples[] = new Sample(
 						$count,
