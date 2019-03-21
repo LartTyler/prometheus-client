@@ -145,6 +145,8 @@
 				// Ignore any dotfiles in the directory (to support things like .gitkeep / .gitignore)
 				if (strpos($item, '.') === 0)
 					continue;
+				else if (strrpos($item, $this->lockSuffix) === strlen($item) - strlen($this->lockSuffix))
+					continue;
 
 				$key = $this->decodeFilename($item);
 
