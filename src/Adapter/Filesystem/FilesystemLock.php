@@ -8,24 +8,24 @@
 		protected $path;
 
 		/**
+		 * @var resource
+		 */
+		protected $handle;
+
+		/**
 		 * @var bool
 		 */
 		protected $owned = false;
 
 		/**
-		 * @var int
-		 */
-		protected $maxAge;
-
-		/**
 		 * FilesystemLock constructor.
 		 *
 		 * @param string $path   The path to the file this lock belongs to
-		 * @param int    $maxAge The maximum age of the lock, in seconds (locks older than `$maxAge` will be ignored)
+		 * @param string $suffix The lock file suffix, added to the end of the filename being locked
 		 */
-		public function __construct($path, $maxAge = 5) {
-			$this->path = $path . '.lock';
-			$this->maxAge = $maxAge;
+		public function __construct($path, $suffix = '.lock') {
+			$this->path = $path . $suffix;
+			$this->handle = fopen($this->path, 'w');
 		}
 
 		/**
@@ -39,12 +39,13 @@
 
 		/**
 		 * Attempts to acquire the file lock. A file lock can only be acquired if the lock is not already held by
-		 * another process, and the lock is not older than the max age specified in the constructor.
+		 * another process.
 		 *
 		 * @return bool
+		 * @see flock()
 		 */
 		public function acquire() {
-			if (file_exists($this->path) && time() - fileatime($this->path) < $this->maxAge)
+			if (!flock($this->handle, LOCK_EX))
 				return false;
 
 			touch($this->path);
@@ -61,7 +62,7 @@
 			if (!$this->isOwned())
 				return false;
 
-			unlink($this->path);
+			flock($this->handle, LOCK_UN);
 
 			return true;
 		}
@@ -75,7 +76,7 @@
 		 *
 		 * @return bool
 		 */
-		public function await($timeout = 500, $retryDelay = 100) {
+		public function await($timeout = 500, $retryDelay = 10) {
 			$start = microtime(true);
 
 			do {
@@ -86,5 +87,14 @@
 			} while ((microtime(true) - $start) * 1000 < $timeout);
 
 			return false;
+		}
+
+		/**
+		 * @return void
+		 */
+		public function __destruct() {
+			$this->release();
+
+			fclose($this->handle);
 		}
 	}
