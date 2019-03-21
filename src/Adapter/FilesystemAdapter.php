@@ -11,6 +11,11 @@
 		protected $basePath;
 
 		/**
+		 * @var string
+		 */
+		protected $lockSuffix;
+
+		/**
 		 * @var string[]
 		 */
 		protected $keyCache = [];
@@ -19,10 +24,13 @@
 		 * FilesystemAdapter constructor.
 		 *
 		 * @param string $basePath
+		 * @param string $lockSuffix
+		 *
 		 * @throws \RuntimeException if $basePath is not readable or writable by PHP
 		 */
-		public function __construct($basePath) {
+		public function __construct($basePath, $lockSuffix = '.lock') {
 			$this->basePath = rtrim($basePath, '\\/');
+			$this->lockSuffix = $lockSuffix;
 
 			if (!is_readable($this->basePath) || !is_writable($this->basePath))
 				throw new \RuntimeException($this->basePath . ' must be readable and writable by PHP');
@@ -101,6 +109,9 @@
 
 			unlink($this->getPath($key));
 
+			if (file_exists($lockPath = $this->getPath($key) . $this->lockSuffix))
+				unlink($lockPath);
+
 			return true;
 		}
 
@@ -112,7 +123,7 @@
 				return false;
 
 			$path = $this->getPath($key);
-			$lock = new FilesystemLock($path);
+			$lock = new FilesystemLock($path, $this->lockSuffix);
 
 			if (!$lock->await($timeout))
 				return false;

@@ -15,7 +15,8 @@
 		"ext-json": "*"
 	},
 	"require-dev": {
-		"ext-apcu": "*"
+		"ext-apcu": "*",
+		"phpunit/phpunit": "^5.0"
 	},
 	"suggest": {
 		"ext-apcu": "If you want to use the APCu adapter"
@@ -24,5 +25,13 @@
 		"psr-4": {
 			"DaybreakStudios\\PrometheusClient\\": "src/"
 		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Tests\\DaybreakStudios\\PrometheusClient\\": "tests/"
+		}
+	},
+	"scripts": {
+		"test": "phpunit"
 	}
 }
