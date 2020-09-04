@@ -25,8 +25,8 @@
 		 */
 		public function __construct(
 			AdapterInterface $adapter,
-			$name,
-			$help,
+			string $name,
+			string $help,
 			array $buckets,
 			array $labelNames = []
 		) {
@@ -76,7 +76,7 @@
 		/**
 		 * @return MetricInterface[]
 		 */
-		public function collect() {
+		public function collect(): array {
 			$prefix = $this->getStorageSearchPrefix();
 			$bucketValues = [];
 
@@ -131,7 +131,7 @@
 		 *
 		 * @return void
 		 */
-		protected function assertLabelsAreValid(array $labels) {
+		protected function assertLabelsAreValid(array $labels): void {
 			if (isset($labels['le']))
 				throw new \InvalidArgumentException('Histograms cannot have a label named "le"');
 

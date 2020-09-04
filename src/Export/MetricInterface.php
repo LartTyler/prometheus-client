@@ -7,24 +7,24 @@
 		 *
 		 * @return string
 		 */
-		public function getName();
+		public function getName(): string;
 
 		/**
 		 * Gets the type name of the samples in the group.
 		 *
 		 * @return string
 		 */
-		public function getType();
+		public function getType(): string;
 
 		/**
 		 * Gets the help text for the samples in the group.
 		 *
 		 * @return string
 		 */
-		public function getHelp();
+		public function getHelp(): string;
 
 		/**
 		 * @return SampleInterface[]
 		 */
-		public function getSamples();
+		public function getSamples(): array;
 	}

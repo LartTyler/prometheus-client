@@ -28,7 +28,7 @@
 		 *
 		 * @throws \RuntimeException if $basePath is not readable or writable by PHP
 		 */
-		public function __construct($basePath, $lockSuffix = '.lock') {
+		public function __construct(string $basePath, string $lockSuffix = '.lock') {
 			$this->basePath = rtrim($basePath, '\\/');
 			$this->lockSuffix = $lockSuffix;
 
@@ -53,7 +53,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function get($key, $def = null) {
+		public function get(string $key, $def = null) {
 			if (!$this->exists($key))
 				return $def;
 
@@ -118,7 +118,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function modify(string $key, callable $mutator, $timeout = 500): bool {
+		public function modify(string $key, callable $mutator, int $timeout = 500): bool {
 			if (!$this->exists($key))
 				return false;
 
@@ -175,7 +175,7 @@
 		 *
 		 * @return string
 		 */
-		protected function getPath($key) {
+		protected function getPath(string $key): string {
 			return $this->basePath . DIRECTORY_SEPARATOR . $this->encodeFilename($key);
 		}
 
@@ -186,7 +186,7 @@
 		 *
 		 * @return string
 		 */
-		protected function encodeFilename($key) {
+		protected function encodeFilename(string $key): string {
 			if (!isset($this->keyCache[$key]))
 				$this->keyCache[$key] = strtr(base64_encode($key), '=+/', '-_.');
 
@@ -200,7 +200,7 @@
 		 *
 		 * @return string
 		 */
-		protected function decodeFilename($encodedFilename) {
+		protected function decodeFilename(string $encodedFilename): string {
 			return base64_decode(strtr($encodedFilename, '-_.', '=+/'));
 		}
 
@@ -211,7 +211,7 @@
 		 *
 		 * @return string
 		 */
-		protected function serialize($value) {
+		protected function serialize($value): string {
 			return serialize($value);
 		}
 
@@ -222,7 +222,7 @@
 		 *
 		 * @return mixed
 		 */
-		protected function unserialize($data) {
+		protected function unserialize(string $data) {
 			return unserialize($data);
 		}
 	}

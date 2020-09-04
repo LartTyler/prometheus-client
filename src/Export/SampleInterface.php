@@ -7,14 +7,14 @@
 		 *
 		 * @return string|null
 		 */
-		public function getName();
+		public function getName(): ?string;
 
 		/**
 		 * Gets the sample's labels.
 		 *
 		 * @return array
 		 */
-		public function getLabels();
+		public function getLabels(): array;
 
 		/**
 		 * Gets the value of the sample.

@@ -30,7 +30,7 @@
 		 * @param string            $help
 		 * @param SampleInterface[] $samples
 		 */
-		public function __construct($name, $type, $help, array $samples) {
+		public function __construct(string $name, string $type, string $help, array $samples) {
 			$this->name = $name;
 			$this->type = $type;
 			$this->help = $help;
@@ -40,28 +40,28 @@
 		/**
 		 * @return string
 		 */
-		public function getName() {
+		public function getName(): string {
 			return $this->name;
 		}
 
 		/**
 		 * @return string
 		 */
-		public function getType() {
+		public function getType(): string {
 			return $this->type;
 		}
 
 		/**
 		 * @return string
 		 */
-		public function getHelp() {
+		public function getHelp(): string {
 			return $this->help;
 		}
 
 		/**
 		 * @return SampleInterface[]
 		 */
-		public function getSamples() {
+		public function getSamples(): array {
 			return $this->samples;
 		}
 	}

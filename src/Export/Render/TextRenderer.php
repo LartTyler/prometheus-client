@@ -10,7 +10,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function render(array $metrics) {
+		public function render(array $metrics): string {
 			usort(
 				$metrics,
 				function(MetricInterface $a, MetricInterface $b) {
@@ -57,7 +57,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function getMimeType() {
+		public function getMimeType(): string {
 			return static::MIME_TYPE;
 		}
 
@@ -66,7 +66,7 @@
 		 *
 		 * @return string
 		 */
-		protected function sanitize($value) {
+		protected function sanitize(string $value): string {
 			$value = str_replace('\\', '\\\\', $value);
 			$value = str_replace("\n", '\\n', $value);
 
