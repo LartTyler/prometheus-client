@@ -9,7 +9,7 @@
 		 *
 		 * @return bool
 		 */
-		public function exists($key);
+		public function exists(string $key): bool;
 
 		/**
 		 * Sets the given key's value. This method does not have to be executed synchronously with other processes.
@@ -19,7 +19,7 @@
 		 *
 		 * @return bool
 		 */
-		public function set($key, $value);
+		public function set(string $key, $value): bool;
 
 		/**
 		 * Retrieves a value from the store.
@@ -28,7 +28,7 @@
 		 *
 		 * @return int|float
 		 */
-		public function get($key);
+		public function get(string $key);
 
 		/**
 		 * Adds a new item to the store only if the given key does not already exist.
@@ -38,7 +38,7 @@
 		 *
 		 * @return bool
 		 */
-		public function create($key, $value);
+		public function create(string $key, $value): bool;
 
 		/**
 		 * Increments the value of a key in the store. This method MUST be executed such that simultaneous increments
@@ -50,7 +50,7 @@
 		 *
 		 * @return bool
 		 */
-		public function increment($key, $step = 1, $initialValue = 0);
+		public function increment(string $key, $step = 1, $initialValue = 0): bool;
 
 		/**
 		 * Decrements the value of a key in the store. This method MUST be executed such that simultaneous decrements
@@ -62,7 +62,7 @@
 		 *
 		 * @return bool
 		 */
-		public function decrement($key, $step = 1, $initialValue = 0);
+		public function decrement(string $key, $step = 1, $initialValue = 0): bool;
 
 		/**
 		 * Removes a key from the store.
@@ -71,7 +71,7 @@
 		 *
 		 * @return bool
 		 */
-		public function delete($key);
+		public function delete(string $key): bool;
 
 		/**
 		 * Changes the value of a key using the return value of `$mutator`. This method MUST be executed such that
@@ -88,22 +88,25 @@
 		 *
 		 * @return bool
 		 */
-		public function modify($key, callable $mutator, $timeout = 500);
+		public function modify(string $key, callable $mutator, int $timeout = 500): bool;
 
 		/**
-		 * Searches the store for a given prefix, and returns an iterator that provides the key and value of the items
+		 * Searches the store for a given prefix, and returns a generator that provides the key and value of the items
 		 * in the store that matched the prefix.
+		 *
+		 * Each step of the generator will return an array containing two elements, the key and it's value, in that
+		 * order.
 		 *
 		 * @param string $prefix
 		 *
-		 * @return \Iterator
+		 * @return \Generator|array
 		 */
-		public function search($prefix);
+		public function search(string $prefix): \Generator;
 
 		/**
 		 * Deletes all items from the store.
 		 *
 		 * @return bool
 		 */
-		public function clear();
+		public function clear(): bool;
 	}

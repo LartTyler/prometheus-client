@@ -39,14 +39,14 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function exists($key) {
+		public function exists(string $key): bool {
 			return file_exists($this->getPath($key));
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function set($key, $value) {
+		public function set(string $key, $value): bool {
 			return file_put_contents($this->getPath($key), $this->serialize($value)) !== false;
 		}
 
@@ -63,7 +63,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function create($key, $value) {
+		public function create(string $key, $value): bool {
 			if ($this->exists($key))
 				return false;
 
@@ -75,7 +75,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function increment($key, $step = 1, $initialValue = 0) {
+		public function increment(string $key, $step = 1, $initialValue = 0): bool {
 			$this->create($key, $initialValue);
 
 			return $this->modify(
@@ -89,7 +89,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function decrement($key, $step = 1, $initialValue = 0) {
+		public function decrement(string $key, $step = 1, $initialValue = 0): bool {
 			$this->create($key, $initialValue);
 
 			return $this->modify(
@@ -103,7 +103,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function delete($key) {
+		public function delete(string $key): bool {
 			if (!$this->exists($key))
 				return false;
 
@@ -118,7 +118,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function modify($key, callable $mutator, $timeout = 500) {
+		public function modify(string $key, callable $mutator, $timeout = 500): bool {
 			if (!$this->exists($key))
 				return false;
 
@@ -138,9 +138,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function search($prefix) {
-			$keys = [];
-
+		public function search(string $prefix): \Generator {
 			foreach (scandir($this->basePath) as $item) {
 				// Ignore any dotfiles in the directory (to support things like .gitkeep / .gitignore)
 				if (strpos($item, '.') === 0)
@@ -150,17 +148,14 @@
 
 				$key = $this->decodeFilename($item);
 
-				if (strpos($key, $prefix) === 0)
-					$keys[] = $key;
+				yield [$key, $this->get($key)];
 			}
-
-			return new FilesystemIterator($this, $keys);
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function clear() {
+		public function clear(): bool {
 			foreach (scandir($this->basePath) as $item) {
 				$path = $this->basePath . DIRECTORY_SEPARATOR . $item;
 
