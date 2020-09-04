@@ -116,9 +116,9 @@
 		/**
 		 * Decodes a stored value for general use.
 		 *
-		 * @param int $value
+		 * @param int|float $value
 		 *
-		 * @return int|float
+		 * @return int
 		 */
 		protected function decode($value) {
 			return FloatSupport::decode($value);
