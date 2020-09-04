@@ -94,13 +94,13 @@
 			foreach ($this->adapter->search('testSearch') as $item)
 				$found[$item[0]] = $item[1];
 
-			$this->assertArrayHasKey('testSearch1', $found);
-			$this->assertEquals(1, $found['testSearch1']);
+			$this->assertArrayHasKey('testSearch1', $found, 'it finds prefixed keys');
+			$this->assertEquals(1, $found['testSearch1'], 'it finds prefixed values');
 
-			$this->assertArrayHasKey('testSearch2', $found);
-			$this->assertEquals(2, $found['testSearch2']);
+			$this->assertArrayHasKey('testSearch2', $found, 'it finds prefixed keys');
+			$this->assertEquals(2, $found['testSearch2'], 'it finds prefixed values');
 
-			$this->assertArrayNotHasKey('testSearch3', $found);
+			$this->assertArrayNotHasKey('testSearch3', $found, 'it does not find non-prefixed keys');
 		}
 
 		public function testClear() {
