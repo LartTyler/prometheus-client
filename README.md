@@ -122,20 +122,28 @@ below.
 ## Adapters
 This library provides access to the underlying storage system via adapters. The built-in adapters are documented below.
 
-### APCu
-The `DaybreakStudios\PrometheusClient\Adapter\ApcuAdapter` uses [APCu](http://php.net/manual/en/book.apcu.php) to store
-metrics. The APCU adapter uses no additional configuration.
+### Redis
+The `DaybreakStudios\PrometheusClient\Adapter\RedisAdapter` uses Redis to store metrics. To use the Redis adapter, you
+simply need to provide it with the host of the Redis instance.
 
-There are a few pitfalls to be aware of, however. APCu, by default, does not persist stored data through certain events,
-such as a server reboot. Additionally, it also wipes it's entire cache once the cache fills up. Neither of those
-should cause problems for your Prometheus installation, but it's something you should keep in mind if you choose to use
-the APCu adapter.
+```php
+<?php
+    use DaybreakStudios\PrometheusClient\Adapter\RedisAdapter;
+    use DaybreakStudios\PrometheusClient\Adapter\Redis\RedisClientConfiguration;
 
-Additionally, APCu _does not_ properly support accessing it's cache for PHP sessions started from the command line.
-Under a default configuration, every call to an `apcu_*` function is "black holed", meaning that they'll always return
-`false`, and will not store any data in the cache. You can enable the CLI cache by adding `apc.enable_cli=1` to your
-`php.ini`, but that will only keep information in the cache for the run time of the script. Once the script is done
-executing, the cache data will be purged. As far as I'm aware, _there is no way to alter this behavior_.
+    $config = new RedisClientConfiguration('localhost');
+    
+    // You can also supply other information, such as port or password, using the setters
+    // available on the configuration object, e.g.:
+    //     - $config->setPort(1234)
+    //     - $config->setPassword('MyTotallySecurePassword')
+
+    $adapter = new RedisAdapter($config);
+```
+
+Keys in the Redis adapter are automatically prefixed in order to prevent collisions with other keys that might be in
+your Redis instance. By default, the prefix is "dbstudios_prom:", but you can change this by providing a second argument
+to the constructor of `RedisClientConfiguration`.
 
 ### Filesystem
 The `DaybreakStudios\PrometheusClient\Adapter\FilesystemAdapter` uses files to store metrics. Data written to the
@@ -154,3 +162,18 @@ Prometheus.
 Unlike the [APCu adapter](#apcu), cached data will persist, even if your server reboots. You can use the
 `FilesystemAdapter::clear()` method to remove all files from the adapter's cache. Please keep in mind that this will
 delete _everything_ in the directory you specified as the adapter's base directory.
+
+### APCu
+The `DaybreakStudios\PrometheusClient\Adapter\ApcuAdapter` uses [APCu](http://php.net/manual/en/book.apcu.php) to store
+metrics. The APCU adapter uses no additional configuration.
+
+There are a few pitfalls to be aware of, however. APCu, by default, does not persist stored data through certain events,
+such as a server reboot. Additionally, it also wipes its entire cache once the cache fills up. Neither of those
+should cause problems for your Prometheus installation, but it's something you should keep in mind if you choose to use
+the APCu adapter.
+
+Additionally, APCu _does not_ properly support accessing its cache for PHP sessions started from the command line.
+Under a default configuration, every call to an `apcu_*` function is "black holed", meaning that they'll always return
+`false`, and will not store any data in the cache. You can enable the CLI cache by adding `apc.enable_cli=1` to your
+`php.ini`, but that will only keep information in the cache for the run time of the script. Once the script is done
+executing, the cache data will be purged. As far as I'm aware, _there is no way to alter this behavior_.
