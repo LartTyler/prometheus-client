@@ -58,7 +58,7 @@
 		public function increment(string $key, $step = 1, $initialValue = 0): bool {
 			$this->create($key, $initialValue);
 
-			return $this->getClient()->incrBy($this->config->getKeyPrefix() . $key, $step);
+			return $this->getClient()->incrByFloat($this->config->getKeyPrefix() . $key, $step);
 		}
 
 		/**
@@ -67,7 +67,9 @@
 		public function decrement(string $key, $step = 1, $initialValue = 0): bool {
 			$this->create($key, $initialValue);
 
-			return $this->getClient()->decrBy($this->config->getKeyPrefix() . $key, $step);
+			// Redis doesn't seem to implement a decrByFloat method, for some strange reason. So I guess we need to
+			// increment by the negated value of step instead?
+			return $this->getClient()->incrByFloat($this->config->getKeyPrefix() . $key, -$step);
 		}
 
 		/**
