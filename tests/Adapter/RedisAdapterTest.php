@@ -148,6 +148,9 @@
 				$this->redis->auth($config->getPassword());
 		}
 
+		/**
+		 * {@inheritdoc}
+		 */
 		protected function tearDown() {
 			$cursor = null;
 
