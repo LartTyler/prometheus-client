@@ -1,8 +1,8 @@
 <?php /** @noinspection PhpComposerExtensionStubsInspection */
 	namespace DaybreakStudios\PrometheusClient\Adapter;
 
+	use DaybreakStudios\PrometheusClient\Adapter\Apcu\FloatSupport;
 	use DaybreakStudios\PrometheusClient\Adapter\Exceptions\AdapterException;
-	use DaybreakStudios\PrometheusClient\Collector\FloatSupport;
 
 	class ApcuAdapter implements AdapterInterface {
 		/**

@@ -1,5 +1,5 @@
 <?php
-	namespace DaybreakStudios\PrometheusClient\Collector;
+	namespace DaybreakStudios\PrometheusClient\Adapter\Apcu;
 
 	final class FloatSupport {
 		/**
