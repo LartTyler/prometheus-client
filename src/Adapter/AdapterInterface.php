@@ -99,7 +99,7 @@
 		 *
 		 * @param string $prefix
 		 *
-		 * @return \Generator|array
+		 * @return \Generator|array[]
 		 */
 		public function search(string $prefix): \Generator;
 
