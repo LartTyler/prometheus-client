@@ -28,9 +28,12 @@ Vagrant.configure("2") do |config|
 		fi
 
 		apt-get install -y php-apcu
-		apt-get remove php7*
 
 		phpenmod apcu
+
+		apt-get install -y redis-server
+		systemctl enable redis-server
+		systemctl start redis-server
 	SHELL
 
 	config.vm.provision "shell", privileged: false, inline: <<-SHELL

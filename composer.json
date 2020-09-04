@@ -12,7 +12,8 @@
 	],
 	"require": {
 		"php": ">=7.3",
-		"ext-json": "*"
+		"ext-json": "*",
+		"ext-redis": "*"
 	},
 	"require-dev": {
 		"ext-apcu": "*",
