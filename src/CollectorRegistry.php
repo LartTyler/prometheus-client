@@ -114,8 +114,12 @@
 		protected function getOfType(string $name, string $class, bool $throwOnMissing = true): ?CollectorInterface {
 			$collector = $this->get($name, $throwOnMissing);
 
-			if ($collector && !is_a($collector, $class))
-				throw CollectorRegistryException::collectorClassMismatch($name, $class, get_class($collector));
+			if ($collector && !is_a($collector, $class)) {
+				if ($throwOnMissing)
+					throw CollectorRegistryException::collectorClassMismatch($name, $class, get_class($collector));
+
+				$collector = null;
+			}
 
 			return $collector;
 		}
