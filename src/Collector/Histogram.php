@@ -80,7 +80,7 @@
 			$prefix = $this->getStorageSearchPrefix();
 			$bucketValues = [];
 
-			foreach ($this->adapter->search($prefix) as $key => $value) {
+			foreach ($this->adapter->search($prefix) as [$key, $value]) {
 				$parts = explode(':', $key);
 				$count = sizeof($parts);
 
