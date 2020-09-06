@@ -119,6 +119,143 @@ below.
     echo $renderer->render($registry->collect());
 ```
 
+## Collectors
+Collectors are the interface between your code and Prometheus. The Prometheus spec currently defines 3 supported
+collector types, which are documented below.
+
+For more information on the concepts of collectors, please refer to the
+[official Prometheus documentation](https://prometheus.io/docs/concepts/metric_types/).
+
+### Counters
+Counters are the simplest form of collector. The official Prometheus documentation describes counters like so.
+
+> A _counter_ is a cumulative metric that represents a single
+> [monotonically increasing counter](https://en.wikipedia.org/wiki/Monotonic_function) whose value can only increase or
+> be reset to zero on restart.
+
+Basically, a counter is a collector that can only increase, usually by increments of one. For example, you might use it
+to track the number of requests an application has served, or the number of database queries an application has
+executed.
+
+```php
+<?php
+    use DaybreakStudios\PrometheusClient\Collector\Counter;
+
+    /**
+     * @var \DaybreakStudios\PrometheusClient\Adapter\AdapterInterface $adapter 
+     */
+    $counter = new Counter($adapter, 'requests_served', 'The number of requests processed by the application');
+
+    $counter->increment();
+    $counter->increment([], 3);
+```
+
+All arguments to `Counter::increment()` are optional. The first argument is the [labels](#using-labels) to use for
+the counter being incremented. The second argument is the step for the increment (defaults to one).
+
+### Gauges
+A gauge is very similar to a [counter](#counters). However, unlike counters, they can increase or decrease, and can
+even have their current value set to a specific number. The official Prometheus documentation describes gauges like so.
+
+> A _gauge_ is a metric that represents a single numerical value that can arbitrarily go up and down.
+
+A gauge is useful for tracking things like temperature, or CPU or memory usage.
+
+```php
+<?php
+    use DaybreakStudios\PrometheusClient\Collector\Gauge;
+
+    /**
+     * @var \DaybreakStudios\PrometheusClient\Adapter\AdapterInterface $adapter
+     */
+    $gauge = new Gauge($adapter, 'cpu_usage_last5', 'CPU usage average over the last 5 minutes');
+
+    $gauge->increment();
+    $gauge->decrement();
+    $gauge->set(1.7);
+```
+
+Much like a [counter](#counters), the arguments to `Gauge::increment()` and `Gauge::decrement()` are optional. Both
+accept up to two arguments: labels and the step, in that order.
+
+You can use `Gauge::set()` to update the gauge to a specific value. It accepts one or two arguments, the first being
+the required value to set the gauge to, and the second optional value being the labels for the gauge.
+
+### Histograms
+A histogram is (compared to [counters](#counters) and [gauges](#gauges)) a relatively complex collector. The official
+Prometheus documentation describes histograms like so.
+
+> A _histogram_ samples observations (usually things like request durations or response sizes) and counts them in
+> configurable buckets. It also provides a sum of all observed values.
+
+Histograms can be useful when you're dealing with a metric that might vary wildly each time it's recorded, and can be
+used to separate the recorded metrics into quantiles for easier analysis. For example, a histogram may be useful in
+analyzing execution times for different code paths, and recording data in a way that outliers can be easily identified
+(such as that one particularly slow piece of code that _you can't make run any faster no matter how many hundreds of
+hours you throw at it_).
+
+```php
+<?php
+    use DaybreakStudios\PrometheusClient\Collector\Histogram;
+   
+    /**
+     * @var \DaybreakStudios\PrometheusClient\Adapter\AdapterInterface $adapter
+     */
+    $histogram = new Histogram(
+        $adapter,
+        'api_call_execution_time_milliseconds',
+        'Call time to external API',
+        [50, 1000, 5000]
+    );
+
+    $histogram->observe(17);
+    $histogram->observe(120);
+    $histogram->observe(2700);
+    $histogram->observe(7010);
+```
+
+Since histograms are often used for timing, there are two built-in utility methods for working with time.
+
+```php
+<?php
+    /**
+     * @var \DaybreakStudios\PrometheusClient\Collector\Histogram $histogram
+     */
+
+    $timer = $histogram->startTimer();
+    usleep(10000); // ~10 ms
+    $timer->observe(); // Tracks time since Histogram::startTime() was invoked and adds it to the histogram
+
+    $histogram->time(function() {
+        usleep(100000); // ~100 ms
+    }); // Invokes the callable passed to Histogram::time() and adds the execution time as a value of the histogram
+```
+
+By default, histograms track time with millisecond precision. However, a histogram accepts an optional constructor
+argument to change this to second precision, if that's better suited for your needs.
+
+```php
+<?php
+    use DaybreakStudios\PrometheusClient\Collector\Histogram;
+    use DaybreakStudios\PrometheusClient\Collector\HistogramTimer;
+
+    /**
+     * @var \DaybreakStudios\PrometheusClient\Adapter\AdapterInterface $adapter
+     */
+    $histogram = new Histogram(
+        $adapter,
+        'api_call_execution_time_seconds',
+        'Call time to external API',
+        [100, 1000, 5000],
+        [],
+        HistogramTimer::PRECISION_SECONDS,
+    );
+
+    $histogram->time(function() {
+        usleep(1100000); // ~1100 ms or 1.1 s
+    }); // Adds 1 to the histogram (e.g. `$histogram->observe(1)`)
+```
+
 ## Adapters
 This library provides access to the underlying storage system via adapters. The built-in adapters are documented below.
 
