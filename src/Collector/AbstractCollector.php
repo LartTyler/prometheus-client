@@ -90,7 +90,7 @@
 		/**
 		 * @return string
 		 */
-		public function getStorageKeyPrefix() {
+		public function getStorageKeyPrefix(): string {
 			return $this->storageKeyPrefix;
 		}
 
@@ -99,7 +99,7 @@
 		 *
 		 * @return $this
 		 */
-		public function setStorageKeyPrefix($storageKeyPrefix) {
+		public function setStorageKeyPrefix(string $storageKeyPrefix) {
 			$this->storageKeyPrefix = $storageKeyPrefix;
 
 			return $this;
@@ -138,7 +138,7 @@
 		 *
 		 * @return string
 		 */
-		protected function getStorageKey(array $labels) {
+		protected function getStorageKey(array $labels): string {
 			return implode(
 				':',
 				array_merge(
@@ -153,14 +153,14 @@
 		/**
 		 * @return string
 		 */
-		protected function getStorageSearchPrefix() {
+		protected function getStorageSearchPrefix(): string {
 			return implode(':', $this->getStorageKeyParts()) . ':';
 		}
 
 		/**
-		 * @return array
+		 * @return string[]
 		 */
-		protected function getStorageKeyParts() {
+		protected function getStorageKeyParts(): array {
 			return [
 				$this->getStorageKeyPrefix(),
 				$this->getName(),
@@ -172,7 +172,7 @@
 		 *
 		 * @return string
 		 */
-		protected function encodeLabels(array $labels) {
+		protected function encodeLabels(array $labels): string {
 			ksort($labels);
 
 			return base64_encode(json_encode($labels));
@@ -183,7 +183,7 @@
 		 *
 		 * @return array
 		 */
-		protected function decodeLabels($encodedLabels) {
+		protected function decodeLabels(string $encodedLabels): array {
 			return json_decode(base64_decode($encodedLabels), true);
 		}
 
