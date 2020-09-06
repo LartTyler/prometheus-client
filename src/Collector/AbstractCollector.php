@@ -112,7 +112,7 @@
 			$prefix = $this->getStorageSearchPrefix();
 			$samples = [];
 
-			foreach ($this->adapter->search($prefix) as $key => $value) {
+			foreach ($this->adapter->search($prefix) as [$key, $value]) {
 				$labels = $this->decodeLabels(substr($key, strrpos($key, ':') + 1));
 
 				$samples[] = new Sample($value, $labels);
