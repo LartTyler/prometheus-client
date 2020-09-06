@@ -97,6 +97,11 @@
 		 * Each step of the generator will return an array containing two elements, the key and it's value, in that
 		 * order.
 		 *
+		 * Implementations should ensure that the keys returned from this method will function as expected when used
+		 * with other methods of the _same instance of the adapter_. That is to say, any prefixes or transformations
+		 * applied to keys internally should be stripped before being returned from this method, such that passing a
+		 * key returned by this method to another method (e.g. {@see AdapterInterface::set()}) should update the key.
+		 *
 		 * @param string $prefix
 		 *
 		 * @return \Generator|array[]
