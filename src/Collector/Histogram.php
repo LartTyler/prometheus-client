@@ -15,6 +15,11 @@
 		protected $buckets;
 
 		/**
+		 * @var int
+		 */
+		protected $timerPrecision;
+
+		/**
 		 * Histogram constructor.
 		 *
 		 * @param AdapterInterface $adapter
@@ -22,13 +27,15 @@
 		 * @param string           $help
 		 * @param array            $buckets
 		 * @param array            $labelNames
+		 * @param int              $timerPrecision
 		 */
 		public function __construct(
 			AdapterInterface $adapter,
 			string $name,
 			string $help,
 			array $buckets,
-			array $labelNames = []
+			array $labelNames = [],
+			int $timerPrecision = HistogramTimer::PRECISION_MILLISECONDS
 		) {
 			if (in_array('le', $labelNames))
 				throw new \InvalidArgumentException('Histograms cannot have a label named "le"');
@@ -36,9 +43,12 @@
 			parent::__construct($adapter, $name, static::TYPE, $help, $labelNames);
 
 			$this->buckets = $buckets;
+			$this->timerPrecision = $timerPrecision;
 		}
 
 		/**
+		 * Records a new value in the histogram.
+		 *
 		 * @param int|float $value
 		 * @param array     $labels
 		 *
@@ -124,6 +134,36 @@
 			return [
 				new Metric($this->getName(), $this->getType(), $this->getHelp(), $samples),
 			];
+		}
+
+		/**
+		 * Creates a {@see HistogramTimer} object that can be used to time an action, and automatically add the duration
+		 * to the bucket.
+		 *
+		 * Inspired by the timing utility methods in {@see https://github.com/prometheus/client_java#histogram}.
+		 *
+		 * @return HistogramTimer
+		 */
+		public function startTimer(): HistogramTimer {
+			return new HistogramTimer($this, $this->timerPrecision);
+		}
+
+		/**
+		 * Executes a `callable`, adding the execution time as a value in the bucket.
+		 *
+		 * Inspired by the timing utility methods in {@see https://github.com/prometheus/client_java#histogram}.
+		 *
+		 * @param callable $callable
+		 * @param array    $labels
+		 *
+		 * @return $this
+		 */
+		public function time(callable $callable, array $labels = []) {
+			$timer = $this->startTimer();
+			call_user_func($callable);
+			$timer->observe($labels);
+
+			return $this;
 		}
 
 		/**

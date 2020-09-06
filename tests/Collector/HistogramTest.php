@@ -3,6 +3,7 @@
 
 	use DaybreakStudios\PrometheusClient\Adapter\MemoryAdapter;
 	use DaybreakStudios\PrometheusClient\Collector\Histogram;
+	use DaybreakStudios\PrometheusClient\Exception\HistogramTimerException;
 
 	class HistogramTest extends \PHPUnit_Framework_TestCase {
 		public function testInfoMethods() {
@@ -23,6 +24,63 @@
 			$prop->setAccessible(true);
 
 			$this->assertEquals([1, 5, 10], $prop->getValue($histogram));
+		}
+
+		public function testStartTimer() {
+			$histogram = new Histogram(new MemoryAdapter(), 'testStartTimer1', '', [100, 1000]);
+
+			$timer = $histogram->startTimer();
+			usleep(10000); // ~10 ms
+			$timer->observe();
+
+			$metric = $histogram->collect()[0];
+
+			$this->assertEquals(1, $metric->getSamples()[0]->getValue()); // <= 100
+			$this->assertEquals(1, $metric->getSamples()[1]->getValue()); // <= 1000
+			$this->assertEquals(1, $metric->getSamples()[3]->getValue()); // <= +Inf
+
+			$timer = $histogram->startTimer();
+			usleep(500000); // ~500 ms
+			$timer->observe();
+
+			$metric = $histogram->collect()[0];
+
+			$this->assertEquals(1, $metric->getSamples()[0]->getValue()); // <= 100
+			$this->assertEquals(2, $metric->getSamples()[1]->getValue()); // <= 1000
+			$this->assertEquals(2, $metric->getSamples()[3]->getValue()); // <= +Inf
+		}
+
+		public function testTime() {
+			$histogram = new Histogram(new MemoryAdapter(), 'testTime1', '', [100, 1000]);
+
+			$histogram->time(function() {
+				usleep(10000); // ~10 ms
+			});
+
+			$metric = $histogram->collect()[0];
+
+			$this->assertEquals(1, $metric->getSamples()[0]->getValue()); // <= 100
+			$this->assertEquals(1, $metric->getSamples()[1]->getValue()); // <= 1000
+			$this->assertEquals(1, $metric->getSamples()[3]->getValue()); // <= +Inf
+
+			$histogram->time(function() {
+				usleep(500000); // ~500 ms
+			});
+
+			$metric = $histogram->collect()[0];
+
+			$this->assertEquals(1, $metric->getSamples()[0]->getValue()); // <= 100
+			$this->assertEquals(2, $metric->getSamples()[1]->getValue()); // <= 1000
+			$this->assertEquals(2, $metric->getSamples()[3]->getValue()); // <= +Inf
+		}
+
+		public function testOnTimerMultiObserve() {
+			$histogram = new Histogram(new MemoryAdapter(), 'testOnTimerMultiObserve1', '', [0]);
+			$timer = $histogram->startTimer();
+			$timer->observe();
+
+			$this->expectException(HistogramTimerException::class);
+			$timer->observe();
 		}
 
 		public function testUpdateCollect() {

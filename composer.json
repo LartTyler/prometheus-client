@@ -17,10 +17,13 @@
 	},
 	"require-dev": {
 		"ext-apcu": "*",
-		"phpunit/phpunit": "^5.0"
+		"phpunit/phpunit": "^5.0",
+		"symfony/stopwatch": "^5.1"
 	},
 	"suggest": {
-		"ext-apcu": "If you want to use the APCu adapter"
+		"ext-apcu": "If you want to use the APCu adapter",
+		"ext-redis": "If you want to use the Redis adapter",
+		"symfony/stopwatch": "If you want to use the Histogram timing features"
 	},
 	"autoload": {
 		"psr-4": {
