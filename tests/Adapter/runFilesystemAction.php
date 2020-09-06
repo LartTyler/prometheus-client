@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
-	use DaybreakStudios\PrometheusClient\Adapter\FilesystemAdapter;
+
+	use DaybreakStudios\PrometheusClient\Adapter\Filesystem\FilesystemAdapter;
 
 	require __DIR__ . '/../../vendor/autoload.php';
 

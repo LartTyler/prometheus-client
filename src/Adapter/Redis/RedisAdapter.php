@@ -1,8 +1,8 @@
 <?php
-	namespace DaybreakStudios\PrometheusClient\Adapter;
+	namespace DaybreakStudios\PrometheusClient\Adapter\Redis;
 
+	use DaybreakStudios\PrometheusClient\Adapter\AdapterInterface;
 	use DaybreakStudios\PrometheusClient\Adapter\Exceptions\AdapterException;
-	use DaybreakStudios\PrometheusClient\Adapter\Redis\RedisClientConfiguration;
 
 	class RedisAdapter implements AdapterInterface {
 		/**

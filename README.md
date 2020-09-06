@@ -25,7 +25,7 @@ using.
 
 ```php
 <?php
-    use DaybreakStudios\PrometheusClient\Adapter\ApcuAdapter;
+    use DaybreakStudios\PrometheusClient\Adapter\Apcu\ApcuAdapter;
     
     $adapter = new ApcuAdapter();
 ```
@@ -123,12 +123,12 @@ below.
 This library provides access to the underlying storage system via adapters. The built-in adapters are documented below.
 
 ### Redis
-The `DaybreakStudios\PrometheusClient\Adapter\RedisAdapter` uses Redis to store metrics. To use the Redis adapter, you
-simply need to provide it with the host of the Redis instance.
+The `DaybreakStudios\PrometheusClient\Adapter\Redis\RedisAdapter` uses Redis to store metrics. To use the Redis adapter,
+you simply need to provide it with the host of the Redis instance.
 
 ```php
 <?php
-    use DaybreakStudios\PrometheusClient\Adapter\RedisAdapter;
+    use DaybreakStudios\PrometheusClient\Adapter\Redis\RedisAdapter;
     use DaybreakStudios\PrometheusClient\Adapter\Redis\RedisClientConfiguration;
 
     $config = new RedisClientConfiguration('localhost');
@@ -146,15 +146,15 @@ your Redis instance. By default, the prefix is "dbstudios_prom:", but you can ch
 to the constructor of `RedisClientConfiguration`.
 
 ### Filesystem
-The `DaybreakStudios\PrometheusClient\Adapter\FilesystemAdapter` uses files to store metrics. Data written to the
-adapter's files is encoded using PHP's [`serialize()`](http://php.net/manual/en/function.serialize.php) function, so
+The `DaybreakStudios\PrometheusClient\Adapter\Filesystem\FilesystemAdapter` uses files to store metrics. Data written to
+the adapter's files is encoded using PHP's [`serialize()`](http://php.net/manual/en/function.serialize.php) function, so
 types will be properly preserved. To use the `FilesystemAdapter`, you will need to specify which directory the adapter
 should use to store it's files. In order to prevent data loss, the directory you specify should _only_ be used by
 Prometheus.
 
 ```php
 <?php
-    use DaybreakStudios\PrometheusClient\Adapter\FilesystemAdapter;
+    use DaybreakStudios\PrometheusClient\Adapter\Filesystem\FilesystemAdapter;
     
     $adapter = new FilesystemAdapter('/var/www/html/prometheus');
 ```
@@ -164,8 +164,8 @@ Unlike the [APCu adapter](#apcu), cached data will persist, even if your server 
 delete _everything_ in the directory you specified as the adapter's base directory.
 
 ### APCu
-The `DaybreakStudios\PrometheusClient\Adapter\ApcuAdapter` uses [APCu](http://php.net/manual/en/book.apcu.php) to store
-metrics. The APCU adapter uses no additional configuration.
+The `DaybreakStudios\PrometheusClient\Adapter\Apcu\ApcuAdapter` uses [APCu](http://php.net/manual/en/book.apcu.php) to
+store metrics. The APCU adapter uses no additional configuration.
 
 There are a few pitfalls to be aware of, however. APCu, by default, does not persist stored data through certain events,
 such as a server reboot. Additionally, it also wipes its entire cache once the cache fills up. Neither of those

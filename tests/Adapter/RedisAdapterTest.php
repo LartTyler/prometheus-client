@@ -1,8 +1,8 @@
 <?php
 	namespace Tests\DaybreakStudios\PrometheusClient\Adapter;
 
+	use DaybreakStudios\PrometheusClient\Adapter\Redis\RedisAdapter;
 	use DaybreakStudios\PrometheusClient\Adapter\Redis\RedisClientConfiguration;
-	use DaybreakStudios\PrometheusClient\Adapter\RedisAdapter;
 
 	class RedisAdapterTest extends \PHPUnit_Framework_TestCase {
 		/**

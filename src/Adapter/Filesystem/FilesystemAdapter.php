@@ -1,8 +1,7 @@
 <?php
-	namespace DaybreakStudios\PrometheusClient\Adapter;
+	namespace DaybreakStudios\PrometheusClient\Adapter\Filesystem;
 
-	use DaybreakStudios\PrometheusClient\Adapter\Filesystem\FilesystemIterator;
-	use DaybreakStudios\PrometheusClient\Adapter\Filesystem\FilesystemLock;
+	use DaybreakStudios\PrometheusClient\Adapter\AdapterInterface;
 
 	class FilesystemAdapter implements AdapterInterface {
 		/**

@@ -1,8 +1,6 @@
 <?php
 	namespace DaybreakStudios\PrometheusClient\Adapter\Filesystem;
 
-	use DaybreakStudios\PrometheusClient\Adapter\FilesystemAdapter;
-
 	class FilesystemIterator implements \Iterator {
 		/**
 		 * @var \ArrayIterator
