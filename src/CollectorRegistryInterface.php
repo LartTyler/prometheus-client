@@ -86,11 +86,12 @@
 		/**
 		 * Returns `true` if a collector exists with the given name.
 		 *
-		 * @param string $name
+		 * @param string      $name
+		 * @param string|null $class
 		 *
 		 * @return bool
 		 */
-		public function has(string $name): bool;
+		public function has(string $name, ?string $class = null): bool;
 
 		/**
 		 * Returns an array of data samples for all registered collectors.

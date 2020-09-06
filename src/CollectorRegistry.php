@@ -83,8 +83,10 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function has(string $name): bool {
-			return isset($this->collectors[$name]);
+		public function has(string $name, ?string $class = null): bool {
+			$collector = $this->collectors[$name] ?? null;
+
+			return $collector !== null && ($class === null || is_a($collector, $class));
 		}
 
 		/**
