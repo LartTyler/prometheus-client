@@ -214,7 +214,9 @@ hours you throw at it_).
     $histogram->observe(7010);
 ```
 
-Since histograms are often used for timing, there are two built-in utility methods for working with time.
+Since histograms are often used for timing, there are two built-in utility methods for working with time. Please note
+that you will need to install the [`symfony/stopwatch`](https://symfony.com/doc/current/components/stopwatch.html)
+component in order to use timing features.
 
 ```php
 <?php
