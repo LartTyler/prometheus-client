@@ -17,8 +17,12 @@ about, all you need is an instance you can can access anywhere in your applicati
     $registry = new CollectorRegistry();
 ```
 
-Next up is an adapter, which acts as an interface between the library code and your chose storage system. At the time
-of writing, this library only ships with an adapter for APCu.
+Next up is an adapter, which acts as an interface between the library code, and your chosen storage system. At the time
+of writing, this library ships with support for the following adapters.
+
+- [Redis](#redis)
+- [Filesystem](#filesystem)
+- [APCu](#apcu)
 
 Instantiation will vary from adapter to adapter, so please check the [documentation for the adapter](#adapters) you're
 using.
