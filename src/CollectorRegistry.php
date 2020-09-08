@@ -45,7 +45,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function get($name, $throwOnMissing = true) {
+		public function get(string $name, bool $throwOnMissing = true): ?CollectorInterface {
 			if (!$this->has($name)) {
 				if ($throwOnMissing)
 					throw CollectorRegistryException::collectorNotFound($name);
@@ -59,35 +59,40 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function getCounter($name, $throwOnMissing = true) {
+		public function getCounter(string $name, bool $throwOnMissing = true): ?Counter {
+			/** @noinspection PhpIncompatibleReturnTypeInspection */
 			return $this->getOfType($name, Counter::class, $throwOnMissing);
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function getGauge($name, $throwOnMissing = true) {
+		public function getGauge(string $name, bool $throwOnMissing = true): ?Gauge {
+			/** @noinspection PhpIncompatibleReturnTypeInspection */
 			return $this->getOfType($name, Gauge::class, $throwOnMissing);
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function getHistogram($name, $throwOnMissing = true) {
+		public function getHistogram(string $name, bool $throwOnMissing = true): ?Histogram {
+			/** @noinspection PhpIncompatibleReturnTypeInspection */
 			return $this->getOfType($name, Histogram::class, $throwOnMissing);
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function has($name) {
-			return isset($this->collectors[$name]);
+		public function has(string $name, ?string $class = null): bool {
+			$collector = $this->collectors[$name] ?? null;
+
+			return $collector !== null && ($class === null || is_a($collector, $class));
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function collect() {
+		public function collect(): array {
 			$metrics = [];
 
 			foreach ($this->collectors as $collector)
@@ -104,14 +109,17 @@
 		 * @param bool   $throwOnMissing
 		 *
 		 * @return CollectorInterface|null
-		 * @throws CollectorRegistryException If `$throwOnMissing` is `true` and no collector was found
 		 * @throws CollectorRegistryException If a collector was found of a type of than the type specified by `$class`
 		 */
-		protected function getOfType($name, $class, $throwOnMissing = true) {
+		protected function getOfType(string $name, string $class, bool $throwOnMissing = true): ?CollectorInterface {
 			$collector = $this->get($name, $throwOnMissing);
 
-			if ($collector && !is_a($collector, $class))
-				throw CollectorRegistryException::collectorClassMismatch($name, $class, get_class($collector));
+			if ($collector && !is_a($collector, $class)) {
+				if ($throwOnMissing)
+					throw CollectorRegistryException::collectorClassMismatch($name, $class, get_class($collector));
+
+				$collector = null;
+			}
 
 			return $collector;
 		}

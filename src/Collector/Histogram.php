@@ -15,6 +15,11 @@
 		protected $buckets;
 
 		/**
+		 * @var int
+		 */
+		protected $timerPrecision;
+
+		/**
 		 * Histogram constructor.
 		 *
 		 * @param AdapterInterface $adapter
@@ -22,13 +27,15 @@
 		 * @param string           $help
 		 * @param array            $buckets
 		 * @param array            $labelNames
+		 * @param int              $timerPrecision
 		 */
 		public function __construct(
 			AdapterInterface $adapter,
-			$name,
-			$help,
+			string $name,
+			string $help,
 			array $buckets,
-			array $labelNames = []
+			array $labelNames = [],
+			int $timerPrecision = HistogramTimer::PRECISION_MILLISECONDS
 		) {
 			if (in_array('le', $labelNames))
 				throw new \InvalidArgumentException('Histograms cannot have a label named "le"');
@@ -36,9 +43,12 @@
 			parent::__construct($adapter, $name, static::TYPE, $help, $labelNames);
 
 			$this->buckets = $buckets;
+			$this->timerPrecision = $timerPrecision;
 		}
 
 		/**
+		 * Records a new value in the histogram.
+		 *
 		 * @param int|float $value
 		 * @param array     $labels
 		 *
@@ -76,11 +86,11 @@
 		/**
 		 * @return MetricInterface[]
 		 */
-		public function collect() {
+		public function collect(): array {
 			$prefix = $this->getStorageSearchPrefix();
 			$bucketValues = [];
 
-			foreach ($this->adapter->search($prefix) as $key => $value) {
+			foreach ($this->adapter->search($prefix) as [$key, $value]) {
 				$parts = explode(':', $key);
 				$count = sizeof($parts);
 
@@ -127,11 +137,41 @@
 		}
 
 		/**
+		 * Creates a {@see HistogramTimer} object that can be used to time an action, and automatically add the duration
+		 * to the bucket.
+		 *
+		 * Inspired by the timing utility methods in {@see https://github.com/prometheus/client_java#histogram}.
+		 *
+		 * @return HistogramTimer
+		 */
+		public function startTimer(): HistogramTimer {
+			return new HistogramTimer($this, $this->timerPrecision);
+		}
+
+		/**
+		 * Executes a `callable`, adding the execution time as a value in the bucket.
+		 *
+		 * Inspired by the timing utility methods in {@see https://github.com/prometheus/client_java#histogram}.
+		 *
+		 * @param callable $callable
+		 * @param array    $labels
+		 *
+		 * @return $this
+		 */
+		public function time(callable $callable, array $labels = []) {
+			$timer = $this->startTimer();
+			call_user_func($callable);
+			$timer->observe($labels);
+
+			return $this;
+		}
+
+		/**
 		 * @param array $labels
 		 *
 		 * @return void
 		 */
-		protected function assertLabelsAreValid(array $labels) {
+		protected function assertLabelsAreValid(array $labels): void {
 			if (isset($labels['le']))
 				throw new \InvalidArgumentException('Histograms cannot have a label named "le"');
 

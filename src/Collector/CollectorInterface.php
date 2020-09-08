@@ -9,33 +9,33 @@
 		 *
 		 * @return string
 		 */
-		public function getName();
+		public function getName(): string;
 
 		/**
 		 * Gets collector's type name.
 		 *
 		 * @return string
 		 */
-		public function getType();
+		public function getType(): string;
 
 		/**
 		 * Gets the collector's help text.
 		 *
 		 * @return string
 		 */
-		public function getHelp();
+		public function getHelp(): string;
 
 		/**
 		 * Gets the names of the labels used by the collector.
 		 *
 		 * @return string[]
 		 */
-		public function getLabelNames();
+		public function getLabelNames(): array;
 
 		/**
 		 * Collects all the metrics held by the collector.
 		 *
 		 * @return MetricInterface[]
 		 */
-		public function collect();
+		public function collect(): array;
 	}

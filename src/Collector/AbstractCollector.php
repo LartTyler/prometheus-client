@@ -45,7 +45,13 @@
 		 * @param string           $help
 		 * @param string[]         $labelNames
 		 */
-		public function __construct(AdapterInterface $adapter, $name, $type, $help, array $labelNames = []) {
+		public function __construct(
+			AdapterInterface $adapter,
+			string $name,
+			string $type,
+			string $help,
+			array $labelNames = []
+		) {
 			$this->adapter = $adapter;
 			$this->name = $name;
 			$this->type = $type;
@@ -56,35 +62,35 @@
 		/**
 		 * @return string
 		 */
-		public function getName() {
+		public function getName(): string {
 			return $this->name;
 		}
 
 		/**
 		 * @return string
 		 */
-		public function getType() {
+		public function getType(): string {
 			return $this->type;
 		}
 
 		/**
 		 * @return string
 		 */
-		public function getHelp() {
+		public function getHelp(): string {
 			return $this->help;
 		}
 
 		/**
 		 * @return array|string[]
 		 */
-		public function getLabelNames() {
+		public function getLabelNames(): array {
 			return $this->labelNames;
 		}
 
 		/**
 		 * @return string
 		 */
-		public function getStorageKeyPrefix() {
+		public function getStorageKeyPrefix(): string {
 			return $this->storageKeyPrefix;
 		}
 
@@ -93,7 +99,7 @@
 		 *
 		 * @return $this
 		 */
-		public function setStorageKeyPrefix($storageKeyPrefix) {
+		public function setStorageKeyPrefix(string $storageKeyPrefix) {
 			$this->storageKeyPrefix = $storageKeyPrefix;
 
 			return $this;
@@ -102,11 +108,11 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function collect() {
+		public function collect(): array {
 			$prefix = $this->getStorageSearchPrefix();
 			$samples = [];
 
-			foreach ($this->adapter->search($prefix) as $key => $value) {
+			foreach ($this->adapter->search($prefix) as [$key, $value]) {
 				$labels = $this->decodeLabels(substr($key, strrpos($key, ':') + 1));
 
 				$samples[] = new Sample($value, $labels);
@@ -132,7 +138,7 @@
 		 *
 		 * @return string
 		 */
-		protected function getStorageKey(array $labels) {
+		protected function getStorageKey(array $labels): string {
 			return implode(
 				':',
 				array_merge(
@@ -147,14 +153,14 @@
 		/**
 		 * @return string
 		 */
-		protected function getStorageSearchPrefix() {
+		protected function getStorageSearchPrefix(): string {
 			return implode(':', $this->getStorageKeyParts()) . ':';
 		}
 
 		/**
-		 * @return array
+		 * @return string[]
 		 */
-		protected function getStorageKeyParts() {
+		protected function getStorageKeyParts(): array {
 			return [
 				$this->getStorageKeyPrefix(),
 				$this->getName(),
@@ -166,7 +172,7 @@
 		 *
 		 * @return string
 		 */
-		protected function encodeLabels(array $labels) {
+		protected function encodeLabels(array $labels): string {
 			ksort($labels);
 
 			return base64_encode(json_encode($labels));
@@ -177,7 +183,7 @@
 		 *
 		 * @return array
 		 */
-		protected function decodeLabels($encodedLabels) {
+		protected function decodeLabels(string $encodedLabels): array {
 			return json_decode(base64_decode($encodedLabels), true);
 		}
 

@@ -1,5 +1,5 @@
 <?php /** @noinspection PhpComposerExtensionStubsInspection */
-	namespace DaybreakStudios\PrometheusClient\Adapter;
+	namespace DaybreakStudios\PrometheusClient\Adapter\Apcu;
 
 	class ApcuIteratorWrapper implements \Iterator {
 		/**

@@ -1,42 +1,42 @@
 <?php /** @noinspection PhpComposerExtensionStubsInspection */
-	namespace DaybreakStudios\PrometheusClient\Adapter;
+	namespace DaybreakStudios\PrometheusClient\Adapter\Apcu;
 
+	use DaybreakStudios\PrometheusClient\Adapter\AdapterInterface;
 	use DaybreakStudios\PrometheusClient\Adapter\Exceptions\AdapterException;
-	use DaybreakStudios\PrometheusClient\Collector\FloatSupport;
 
 	class ApcuAdapter implements AdapterInterface {
 		/**
 		 * {@inheritdoc}
 		 */
-		public function exists($key) {
+		public function exists(string $key): bool {
 			return apcu_exists($key);
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function set($key, $value) {
+		public function set(string $key, $value): bool {
 			return apcu_store($key, $this->encode($value));
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function get($key) {
+		public function get(string $key) {
 			return $this->decode(apcu_fetch($key));
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function create($key, $value) {
+		public function create(string $key, $value): bool {
 			return apcu_add($key, $this->encode($value));
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function increment($key, $step = 1, $initialValue = 0) {
+		public function increment(string $key, $step = 1, $initialValue = 0): bool {
 			$this->create($key, $initialValue);
 
 			return $this->modify(
@@ -50,7 +50,7 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function decrement($key, $step = 1, $initialValue = 0) {
+		public function decrement(string $key, $step = 1, $initialValue = 0): bool {
 			$this->create($key, $initialValue);
 
 			return $this->modify(
@@ -64,14 +64,14 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function delete($key) {
+		public function delete(string $key): bool {
 			return apcu_delete($key);
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function modify($key, callable $mutator, $timeout = 500) {
+		public function modify(string $key, callable $mutator, $timeout = 500): bool {
 			$startTime = microtime(true);
 			$done = false;
 
@@ -90,14 +90,15 @@
 		/**
 		 * {@inheritdoc}
 		 */
-		public function search($prefix) {
-			return new ApcuIteratorWrapper(new \APCUIterator('/' . str_replace('/^', '\\/', $prefix) . '/'));
+		public function search(string $prefix): \Generator {
+			foreach (new \APCUIterator('/' . str_replace('/^', '\\/', $prefix) . '/') as $key => $value)
+				yield [$key, $value];
 		}
 
 		/**
 		 * {@inheritdoc}
 		 */
-		public function clear() {
+		public function clear(): bool {
 			return apcu_clear_cache();
 		}
 
@@ -115,9 +116,9 @@
 		/**
 		 * Decodes a stored value for general use.
 		 *
-		 * @param int $value
+		 * @param int|float $value
 		 *
-		 * @return int|float
+		 * @return int
 		 */
 		protected function decode($value) {
 			return FloatSupport::decode($value);

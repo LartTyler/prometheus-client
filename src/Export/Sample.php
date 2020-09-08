@@ -24,7 +24,7 @@
 		 * @param array       $labels
 		 * @param string|null $name
 		 */
-		public function __construct($value, array $labels, $name = null) {
+		public function __construct($value, array $labels, ?string $name = null) {
 			$this->value = $value;
 			$this->labels = $labels;
 			$this->name = $name;
@@ -33,14 +33,14 @@
 		/**
 		 * @return string|null
 		 */
-		public function getName() {
+		public function getName(): ?string {
 			return $this->name;
 		}
 
 		/**
 		 * @return array
 		 */
-		public function getLabels() {
+		public function getLabels(): array {
 			return $this->labels;
 		}
 

@@ -14,7 +14,7 @@
 		 * @param string           $help
 		 * @param string[]         $labelNames
 		 */
-		public function __construct(AdapterInterface $adapter, $name, $help, array $labelNames = []) {
+		public function __construct(AdapterInterface $adapter, string $name, string $help, array $labelNames = []) {
 			parent::__construct($adapter, $name, static::TYPE, $help, $labelNames);
 		}
 
@@ -24,7 +24,7 @@
 		 *
 		 * @return $this
 		 */
-		public function increment(array $labels = [], $step = 1) {
+		public function increment(array $labels = [], int $step = 1) {
 			$this->assertLabelsAreValid($labels);
 
 			$this->adapter->increment($this->getStorageKey($labels), $step);

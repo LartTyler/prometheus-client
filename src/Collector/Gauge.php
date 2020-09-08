@@ -14,7 +14,7 @@
 		 * @param string           $help
 		 * @param array            $labelNames
 		 */
-		public function __construct(AdapterInterface $adapter, $name, $help, array $labelNames = []) {
+		public function __construct(AdapterInterface $adapter, string $name, string $help, array $labelNames = []) {
 			parent::__construct($adapter, $name, static::TYPE, $help, $labelNames);
 		}
 
@@ -47,8 +47,8 @@
 		}
 
 		/**
-		 * @param array $labels
-		 * @param int   $step
+		 * @param array     $labels
+		 * @param int|float $step
 		 *
 		 * @return $this
 		 */

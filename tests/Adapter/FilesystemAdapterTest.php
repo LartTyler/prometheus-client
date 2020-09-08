@@ -1,7 +1,7 @@
 <?php
 	namespace Tests\DaybreakStudios\PrometheusClient\Adapter;
 
-	use DaybreakStudios\PrometheusClient\Adapter\FilesystemAdapter;
+	use DaybreakStudios\PrometheusClient\Adapter\Filesystem\FilesystemAdapter;
 
 	class FilesystemAdapterTest extends \PHPUnit_Framework_TestCase {
 		/**

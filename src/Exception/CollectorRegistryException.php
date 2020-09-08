@@ -7,7 +7,7 @@
 		 *
 		 * @return static
 		 */
-		public static function collectorAlreadyRegistered($name) {
+		public static function collectorAlreadyRegistered(string $name) {
 			return new static('A collector named ' . $name . ' has already been registered to this registry');
 		}
 
@@ -16,7 +16,7 @@
 		 *
 		 * @return static
 		 */
-		public static function collectorNotFound($name) {
+		public static function collectorNotFound(string $name) {
 			return new static('This registry has no collectors named ' . $name);
 		}
 
@@ -27,7 +27,7 @@
 		 *
 		 * @return CollectorRegistryException
 		 */
-		public static function collectorClassMismatch($name, $expectedClass, $actualClass) {
+		public static function collectorClassMismatch(string $name, string $expectedClass, string $actualClass) {
 			return new static(sprintf('Expected %s to be a %s, but got a %s', $name, $expectedClass, $actualClass));
 		}
 	}

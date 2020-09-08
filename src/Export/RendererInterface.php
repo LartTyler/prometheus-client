@@ -9,12 +9,12 @@
 		 *
 		 * @return string
 		 */
-		public function render(array $metrics);
+		public function render(array $metrics): string;
 
 		/**
 		 * Returns a MIME type appropriate for the renderer.
 		 *
 		 * @return string
 		 */
-		public function getMimeType();
+		public function getMimeType(): string;
 	}
