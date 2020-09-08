@@ -91,8 +91,8 @@
 
 			$found = [];
 
-			foreach ($this->adapter->search('testSearch') as $item)
-				$found[$item[0]] = $item[1];
+			foreach ($this->adapter->search('testSearch') as [$key, $value])
+				$found[$key] = $value;
 
 			$this->assertArrayHasKey('testSearch1', $found, 'it finds prefixed keys');
 			$this->assertEquals(1, $found['testSearch1'], 'it finds prefixed values');

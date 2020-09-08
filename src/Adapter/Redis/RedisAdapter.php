@@ -127,8 +127,8 @@
 		 * {@inheritdoc}
 		 */
 		public function clear(): bool {
-			foreach ($this->search('') as $item)
-				$this->delete($item[0]);
+			foreach ($this->search('') as [$key])
+				$this->delete($key);
 
 			return true;
 		}
