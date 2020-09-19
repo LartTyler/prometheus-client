@@ -147,7 +147,8 @@
 
 				$key = $this->decodeFilename($item);
 
-				yield [$key, $this->get($key)];
+				if (strpos($key, $prefix) === 0)
+					yield [$key, $this->get($key)];
 			}
 		}
 
