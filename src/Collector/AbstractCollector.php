@@ -114,8 +114,7 @@
 
 			foreach ($this->adapter->search($prefix) as [$key, $value]) {
 				$labels = $this->decodeLabels(substr($key, strrpos($key, ':') + 1));
-
-				$samples[] = new Sample($value, $labels);
+				$samples[] = new Sample($value ?: 0, $labels);
 			}
 
 			usort(
