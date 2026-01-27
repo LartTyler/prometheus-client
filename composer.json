@@ -17,7 +17,7 @@
 	"require-dev": {
 		"ext-apcu": "*",
 		"ext-redis": "*",
-		"phpunit/phpunit": "^5.0",
+		"phpunit/phpunit": "^5.0 || ^8.0",
 		"symfony/stopwatch": "^4.4|^5.1"
 	},
 	"suggest": {
